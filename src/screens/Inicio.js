@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Inicio() {
   return (
-    <div>
+    <div className='bg-sky-200'>
       inicio
     </div>
   )

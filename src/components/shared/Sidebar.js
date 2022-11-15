@@ -9,7 +9,6 @@ import { IoMdHeart } from 'react-icons/io'
 export default function sidebar() {
   return (
     <div className='bg-[#1D1D1D] w-[15%] h-full p-3 flex flex-col text-white'>
-      <div className='flex flex-col text-4xl pt-2 pb-4 items-center font-Kanit'><span>Moodie</span></div>
       <div className='flex-1 flex gap-1 flex-col items-right font-light py-2'>
         <SidebarButtons title="Inicio" to="/" icon={<RiHome2Fill/>}/>
         <SidebarButtons title="Coleções" to="/colecoes" icon={<SiDiscogs/>}/>
