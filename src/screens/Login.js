@@ -2,10 +2,12 @@ import React from 'react'
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 //import { lockOpenIcon } from '@heroicons/react/20/solid'
 import { FcGoogle } from 'react-icons/fc'
+import Head from '../components/shared/Head'
 
 export default function Login() {
   return (
-    <div className='relative w-full h-screen bg-gray-800'>
+      <div className='flex flex-col relative w-screen h-screen bg-gray-800'>
+        <Head/>
         <div className='flex justify-center items-center h-full'>
             <form className='p-8 px-8 max-w-[400px] w-full mx-auto rounded-2xl bg-[#7b5cc9]'>
                 <h1 className='text-2xl font-bold text-center text-white'>Para continuar, faça login no Moodie</h1>
