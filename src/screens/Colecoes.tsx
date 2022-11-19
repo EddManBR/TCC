@@ -1,3 +1,3 @@
-export default function Colecoes() {
-  return <div>Colecoes</div>
+export default function () {
+  return <div className="bg-red-500">Hello World</div>
 }
