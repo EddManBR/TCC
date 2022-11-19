@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app'
+import { FirebaseError, initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
@@ -13,3 +13,21 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig)
 export const firestore = getFirestore(app)
+
+export function translateError(firebaseError: FirebaseError) {
+  switch (firebaseError.code) {
+    case 'auth/email-already-in-use':
+      return 'E-mail já está em uso'
+    case 'auth/invalid-email':
+      return 'E-mail inserido é inválido'
+    case 'auth/invalid-password':
+      return 'Senha inserida precisa ser mais forte'
+    case 'auth/user-not-found':
+      return 'E-mail não cadastrado'
+    case 'auth/wrong-password':
+      return 'E-mail ou senha inválidos'
+
+    default:
+      return firebaseError.code
+  }
+}

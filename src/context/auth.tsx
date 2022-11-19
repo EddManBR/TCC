@@ -1,6 +1,13 @@
-import { app } from '../services/firebase'
+import { app, translateError } from '../services/firebase'
 import { createContext, useState } from 'react'
-import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth'
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth'
+import { FirebaseError } from 'firebase/app'
 
 import type { ReactNode } from 'react'
 import type { User } from 'firebase/auth'
@@ -8,10 +15,11 @@ import type { User } from 'firebase/auth'
 type AuthContextValue = {
   signed: boolean
   signInGoogle: () => Promise<boolean>
-  signInEmail: (email: string, password: string) => Promise<void>
+  signInEmail: (email: string, password: string) => Promise<boolean>
+  signUpEmail: (email: string, password: string, passwordConfirmation: string) => Promise<boolean>
 }
 
-const provider = new GoogleAuthProvider()
+const googleProvider = new GoogleAuthProvider()
 export const AuthContext = createContext<AuthContextValue>({} as AuthContextValue)
 
 export function AuthContextProvider({ children }: { children: ReactNode }) {
@@ -20,27 +28,42 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
   async function signInGoogle() {
     try {
-      const result = await signInWithPopup(auth, provider)
-      const { accessToken: token } = GoogleAuthProvider.credentialFromResult(result)!
-
-      setUser(result.user)
-      sessionStorage.setItem('@firebase:token', token!)
-
+      const { user } = await signInWithPopup(auth, googleProvider)
+      setUser(user)
       return true
-
-      // sessionStorage.setItem('@firebase:user', user)
-
-      console.log(`> User logged in using GoogleAuth -> ${token}`)
     } catch (error) {
-      console.log(`> An error ocurred when trying to login using GoogleAuth -> ${error}`)
       return false
     }
   }
 
-  async function signInEmail(email: string, password: string) {}
+  async function signInEmail(email: string, password: string) {
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, email, password)
+      setUser(user)
+      return true
+    } catch (error) {
+      if (error instanceof FirebaseError) throw new Error(translateError(error))
+    }
+
+    return false
+  }
+
+  async function signUpEmail(email: string, password: string, passwordConfirmation: string) {
+    if (password !== passwordConfirmation) throw new Error('As senhas não coincidem')
+
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth, email, password)
+      setUser(user)
+      return true
+    } catch (error) {
+      if (error instanceof FirebaseError) throw new Error(translateError(error))
+    }
+
+    return false
+  }
 
   return (
-    <AuthContext.Provider value={{ signed: !!user, signInEmail, signInGoogle }}>
+    <AuthContext.Provider value={{ signed: !!user, signInEmail, signInGoogle, signUpEmail }}>
       {children}
     </AuthContext.Provider>
   )
