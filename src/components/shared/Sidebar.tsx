@@ -8,7 +8,7 @@ import { HomeIcon, QueueListIcon, HeartIcon } from '@heroicons/react/24/solid'
 
 export default function sidebar() {
   return (
-    <div className='bg-neutral-900 hidden md:flex md:w-64 flex-shrink-0 h-full p-3 flex-col text-white'>
+    <div className='bg-neutral-900 hidden md:flex md:w-64 flex-shrink-0 min-h-screen p-3 flex-col text-white'>
       <div className='flex-1 flex gap-1 flex-col items-right font-light py-2'>
         <SidebarButton
           title='Inicio'
