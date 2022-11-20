@@ -8,15 +8,23 @@ import { HomeIcon, QueueListIcon, HeartIcon } from '@heroicons/react/24/solid'
 
 export default function sidebar() {
   return (
-    <div className='bg-[#1D1D1D] w-[15%] h-full p-3 flex flex-col text-white'>
+    <div className='bg-neutral-900 hidden md:flex md:w-64 flex-shrink-0 h-full p-3 flex-col text-white'>
       <div className='flex-1 flex gap-1 flex-col items-right font-light py-2'>
-        <SidebarButton title='Inicio' to='/' icon={<HomeIcon className='w-6 h-6' />} />
+        <SidebarButton
+          title='Inicio'
+          to='/'
+          icon={<HomeIcon className='w-6 h-6 flex-shrink-0' />}
+        />
         <SidebarButton
           title='Coleções'
           to='/colecoes'
-          icon={<QueueListIcon className='w-6 h-6' />}
+          icon={<QueueListIcon className='w-6 h-6 flex-shrink-0' />}
         />
-        <SidebarButton title='Favoritas' to='/favoritas' icon={<HeartIcon className='w-6 h-6' />} />
+        <SidebarButton
+          title='Favoritas'
+          to='/favoritas'
+          icon={<HeartIcon className='w-6 h-6 flex-shrink-0' />}
+        />
         {/* <SidebarButton title="Playlists" to="/playlists" icon={<RiPlayListFill />} /> */}
       </div>
     </div>
