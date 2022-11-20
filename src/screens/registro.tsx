@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 import { FcGoogle } from 'react-icons/fc'
+import { useEffect } from 'react'
 
 export default function () {
   const navigate = useNavigate()
@@ -18,6 +19,10 @@ export default function () {
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => {
+    if (!!localStorage.getItem('uid')) navigate('/')
+  }, [])
 
   async function handleGoogleClick() {
     const googleSigned = await signInGoogle()

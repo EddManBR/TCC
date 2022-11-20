@@ -8,10 +8,10 @@ import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
+import { useCookies } from 'react-cookie'
 
 import type { ReactNode } from 'react'
 import type { User } from 'firebase/auth'
-import { useCookies } from 'react-cookie'
 
 type AuthContextValue = {
   signed: boolean
@@ -26,13 +26,12 @@ export const AuthContext = createContext<AuthContextValue>({} as AuthContextValu
 export function AuthContextProvider({ children }: { children: ReactNode }) {
   const auth = getAuth(app)
   const [user, setUser] = useState<User>()
-  const [cookies, setCookie] = useCookies(['uid'])
 
   async function signInGoogle() {
     try {
       const { user } = await signInWithPopup(auth, googleProvider)
       setUser(user)
-      setCookie('uid', user.uid, { path: '/' })
+      localStorage.setItem('uid', user.uid)
 
       return true
     } catch (error) {
@@ -44,7 +43,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password)
       setUser(user)
-      setCookie('uid', user.uid, { path: '/' })
+      localStorage.setItem('uid', user.uid)
 
       return true
     } catch (error) {
@@ -60,7 +59,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     try {
       const { user } = await createUserWithEmailAndPassword(auth, email, password)
       setUser(user)
-      setCookie('uid', user.uid, { path: '/' })
+      localStorage.setItem('uid', user.uid)
 
       return true
     } catch (error) {

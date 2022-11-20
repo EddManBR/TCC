@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from 'react'
+import { FormEvent, useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/auth'
 
@@ -17,6 +17,10 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+
+  useEffect(() => {
+    if (!!localStorage.getItem('uid')) navigate('/')
+  }, [])
 
   async function handleGoogleClick() {
     const googleSigned = await signInGoogle()
