@@ -1,4 +1,4 @@
-import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
+import { EllipsisVerticalIcon, ShareIcon } from '@heroicons/react/20/solid'
 
 type MusicProps = {
   coverUrl: string
@@ -24,9 +24,14 @@ export default function Music({ coverUrl, title, views, position }: MusicProps) 
         <span>{title}</span>
         <span className='text-sm text-neutral-400'>{views.toLocaleString()}</span>
       </div>
-      <button className='ml-auto rounded-lg p-1  hover:bg-white/10'>
-        <EllipsisVerticalIcon className=' w-5 h-5' />
-      </button>
+      <div className='ml-auto space-x-1'>
+        <button className=' rounded-lg p-1  hover:bg-white/10'>
+          <EllipsisVerticalIcon className=' w-5 h-5' />
+        </button>
+        <button className=' rounded-lg p-1  hover:bg-white/10'>
+          <ShareIcon className=' w-5 h-5' />
+        </button>
+      </div>
     </div>
   )
 }
