@@ -57,17 +57,7 @@ export default function Perfil() {
               {followerCount.toLocaleString()} seguidores
             </span>
             <div className='flex space-x-2 mt-4'>
-              <button
-                className='w-full button-primary font-semibold'
-                onClick={() =>
-                  setUploadVisible(() => {
-                    document.body.style.overflow = 'hidden'
-                    return true
-                  })
-                }
-              >
-                Editar
-              </button>
+              <button className='w-full button-primary font-semibold'>Editar</button>
             </div>
           </div>
         </div>
@@ -75,7 +65,15 @@ export default function Perfil() {
       <div className='text-white mt-52 md:mt-24 p-4'>
         <div className='flex items-center mb-4'>
           <h1 className='font-bold text-2xl'>Suas Músicas</h1>
-          <button className='button-primary ml-4'>
+          <button
+            className='button-primary ml-4'
+            onClick={() =>
+              setUploadVisible(() => {
+                document.body.style.overflow = 'hidden'
+                return true
+              })
+            }
+          >
             <PlusIcon className='w-5 h-5' />
           </button>
         </div>
