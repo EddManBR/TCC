@@ -18,7 +18,7 @@ export default function SidebarButton({ to, title, icon }: SidebarButtonProps) {
         }`}
       >
         {icon}
-        <p className={`${isActive && 'font-semibold'} text-lg px-4 transition-all`}>{title}</p>
+        <p className={`${isActive && 'font-semibold'} text-lg px-4`}>{title}</p>
       </div>
     </Link>
   )

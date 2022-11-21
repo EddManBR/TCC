@@ -8,7 +8,6 @@ import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
-import { useCookies } from 'react-cookie'
 
 import type { ReactNode } from 'react'
 import type { User } from 'firebase/auth'
