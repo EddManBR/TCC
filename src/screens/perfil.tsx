@@ -1,14 +1,18 @@
+import { useState } from 'react'
+
 import AlbumList from '../components/AlbumList'
 import MusicList from '../components/MusicList'
+import UploadMusicModal from '../components/UploadMusicModal'
 import { PlusIcon } from '@heroicons/react/20/solid'
 
 import type { Music } from '../services/firebase.d'
 
 export default function Perfil() {
-  const name = 'Artista'
-  const followerCount = 1000
+  const [uploadVisible, setUploadVisible] = useState(false)
 
   // TODO: Grab this data from Firebase
+  const name = 'Artista'
+  const followerCount = 1000
   const musics: Music[] = [
     {
       id: '#123',
@@ -53,7 +57,17 @@ export default function Perfil() {
               {followerCount.toLocaleString()} seguidores
             </span>
             <div className='flex space-x-2 mt-4'>
-              <button className='w-full button-primary font-semibold'>Editar</button>
+              <button
+                className='w-full button-primary font-semibold'
+                onClick={() =>
+                  setUploadVisible(() => {
+                    document.body.style.overflow = 'hidden'
+                    return true
+                  })
+                }
+              >
+                Editar
+              </button>
             </div>
           </div>
         </div>
@@ -76,6 +90,7 @@ export default function Perfil() {
         </div>
         <AlbumList />
       </div>
+      <UploadMusicModal visible={uploadVisible} setVisible={setUploadVisible} />
     </div>
   )
 }
