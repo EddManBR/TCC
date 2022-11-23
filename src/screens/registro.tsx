@@ -11,10 +11,11 @@ import { LockClosedIcon } from '@heroicons/react/20/solid'
 import { FcGoogle } from 'react-icons/fc'
 import { useEffect } from 'react'
 
-export default function () {
+export default function RegistroPage() {
   const navigate = useNavigate()
   const { signInGoogle, signUpEmail } = useContext(AuthContext)
 
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
@@ -22,21 +23,23 @@ export default function () {
 
   useEffect(() => {
     if (!!localStorage.getItem('uid')) navigate('/')
-  }, [])
+  }, [navigate])
 
   async function handleGoogleClick() {
-    const googleSigned = await signInGoogle()
-    if (googleSigned) navigate('/')
+    const user = await signInGoogle()
+    if (!!user) navigate('/')
   }
 
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault()
 
-    if (!email || !password) return
+    if (!name || !email || !password) return
 
     try {
-      const couldSignUp = await signUpEmail(email, password, passwordConfirmation)
-      if (couldSignUp) navigate('/')
+      const user = await signUpEmail(name, email, password, passwordConfirmation)
+      if (!!user) {
+        navigate('/')
+      }
     } catch (error) {
       if (error instanceof Error) setErrorMessage(error.message)
     }
@@ -62,6 +65,18 @@ export default function () {
           <ErrorMessageBox message={errorMessage} />
 
           <form onSubmit={handleFormSubmit}>
+            <label className='text-white block mb-4'>
+              <span className='font-semibold'>Nome</span>
+              <input
+                required
+                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2 border-none  focus:bg-violet-400 placeholder:text-violet-300'
+                type='text'
+                placeholder='John Doe'
+                value={name}
+                onChange={(e) => setName(e.currentTarget.value)}
+              />
+            </label>
+
             <label className='text-white block mb-4'>
               <span className='font-semibold'>E-mail</span>
               <input

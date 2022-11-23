@@ -15,9 +15,9 @@ export default function Modal({ children, visible, setVisible }: ModalProps) {
 
   return (
     <div className='flex items-center justify-center top-0 left-0 fixed bg-black/50 z-10 w-screen h-screen'>
-      <div className='flex flex-col bg-neutral-800 p-8 rounded-lg shadow-lg text-white'>
+      <div className='flex flex-col bg-neutral-800 min-w-[24rem] p-8 rounded-lg shadow-lg text-white'>
         <button
-          className='mb-4 ml-auto bg-white/5 hover:bg-white/10 p-2 rounded-lg'
+          className='mb-2 ml-auto bg-white/5 hover:bg-white/10 p-2 rounded-lg'
           onClick={() => {
             document.body.style.overflow = 'auto'
             setVisible(false)

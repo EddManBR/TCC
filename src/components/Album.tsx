@@ -1,4 +1,4 @@
-type AlbumProps = {
+export type AlbumProps = {
   coverUrl: string
   releaseYear: string
   title: string

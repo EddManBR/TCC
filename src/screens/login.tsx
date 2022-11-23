@@ -20,11 +20,11 @@ export default function Login() {
 
   useEffect(() => {
     if (!!localStorage.getItem('uid')) navigate('/')
-  }, [])
+  }, [navigate])
 
   async function handleGoogleClick() {
-    const googleSigned = await signInGoogle()
-    if (googleSigned) navigate('/')
+    const user = await signInGoogle()
+    if (!!user) navigate('/')
   }
 
   async function handleFormSubmit(e: FormEvent) {
@@ -33,8 +33,8 @@ export default function Login() {
     if (!email || !password) return
 
     try {
-      const couldSignIn = await signInEmail(email, password)
-      if (couldSignIn) navigate('/')
+      const user = await signInEmail(email, password)
+      if (!!user) navigate('/')
     } catch (error) {
       if (error instanceof Error) setErrorMessage(error.message)
     }

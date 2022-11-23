@@ -3,16 +3,17 @@ import type { Music } from '../services/firebase.d'
 
 type MusicListProps = {
   data: Music[]
+  coverUrl: string
 }
 
-export default function MusicList({ data }: MusicListProps) {
+export default function MusicList({ data, coverUrl }: MusicListProps) {
   return (
     <div className='flex flex-col space-y-2'>
       {data.map((music, index) => (
         <MusicDisplay
           key={music.id}
           position={index}
-          coverUrl={music.albumCoverUrl}
+          coverUrl={coverUrl}
           title={music.title}
           views={music.views}
         />

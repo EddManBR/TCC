@@ -1,39 +1,61 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 import AlbumList from '../components/AlbumList'
 import MusicList from '../components/MusicList'
 import UploadMusicModal from '../components/UploadMusicModal'
 import { PlusIcon } from '@heroicons/react/20/solid'
 
-import type { Music } from '../services/firebase.d'
+import type { Music, Album } from '../services/firebase.d'
+import { AuthContext } from '../context/auth'
 
 export default function Perfil() {
+  const { user } = useContext(AuthContext)
   const [uploadVisible, setUploadVisible] = useState(false)
 
   // TODO: Grab this data from Firebase
-  const name = 'Artista'
   const followerCount = 1000
   const musics: Music[] = [
     {
       id: '#123',
       title: 'All Eyez On Me',
       albumId: '#321',
-      albumCoverUrl: 'https://upload.wikimedia.org/wikipedia/pt/9/9c/2Pac_-_All_Eyez_on_Me.jpg',
       views: 1000,
     },
     {
       id: '#12333',
       title: 'All Eyez On Me',
       albumId: '#321',
-      albumCoverUrl: 'https://upload.wikimedia.org/wikipedia/pt/9/9c/2Pac_-_All_Eyez_on_Me.jpg',
       views: 1000,
     },
     {
       id: '#1232311',
       title: 'All Eyez On Me',
       albumId: '#321',
-      albumCoverUrl: 'https://upload.wikimedia.org/wikipedia/pt/9/9c/2Pac_-_All_Eyez_on_Me.jpg',
       views: 1000,
+    },
+  ]
+
+  const albums: Album[] = [
+    {
+      id: '#123',
+      title: 'Cool Album',
+      coverUrl: 'https://via.placeholder.com/400',
+      releaseYear: '2004',
+      musics,
+    },
+    {
+      id: '#333',
+      title: 'Gangster Album',
+      coverUrl: 'https://via.placeholder.com/400',
+      releaseYear: '2015',
+      musics,
+    },
+    {
+      id: '#321',
+      title: 'Top Album',
+      coverUrl: 'https://via.placeholder.com/400',
+      releaseYear: '2018',
+      musics,
     },
   ]
 
@@ -52,7 +74,7 @@ export default function Perfil() {
             alt='profile'
           />
           <div className='flex flex-col h-min bg-black/40 p-4 rounded-xl text-white'>
-            <h1 className='text-4xl font-bold'>{name}</h1>
+            <h1 className='text-4xl font-bold'>{user?.name}</h1>
             <span className='text-lg font-semibold'>
               {followerCount.toLocaleString()} seguidores
             </span>
@@ -77,7 +99,8 @@ export default function Perfil() {
             <PlusIcon className='w-5 h-5' />
           </button>
         </div>
-        <MusicList data={musics} />
+        {/* TODO: Make this thing better */}
+        <MusicList data={albums[0].musics} coverUrl={albums[0].coverUrl} />
       </div>
       <div className='text-white mt-4 md:mt-2 p-4'>
         <div className='flex items-center mb-4'>
@@ -86,7 +109,7 @@ export default function Perfil() {
             <PlusIcon className='w-5 h-5' />
           </button>
         </div>
-        <AlbumList />
+        <AlbumList data={albums} />
       </div>
       <UploadMusicModal visible={uploadVisible} setVisible={setUploadVisible} />
     </div>

@@ -1,5 +1,13 @@
 import { FirebaseError, initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  getDocs,
+  getFirestore,
+  type DocumentData,
+} from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB2pSkbCAtTz7Ftydxpi-OjK6FvFfIizEM',
@@ -13,6 +21,51 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig)
 export const firestore = getFirestore(app)
+
+export function generateRandomId() {
+  let result = ''
+  const length = 20
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+  for (let i = 0; i < length; i++) result += characters.charAt(Math.random() * characters.length)
+  return result
+}
+
+export async function getDocument<T>(collection: string, id: string) {
+  const documentReference = doc(firestore, collection, id)
+  const documentSnapshot = await getDoc(documentReference)
+  return documentSnapshot.data() as T
+}
+
+export async function getCollection<T>(name: string) {
+  const response: T[] = []
+  const docs = await getDocs(collection(firestore, name))
+
+  docs.forEach((item) => {
+    response.push(item.data() as T)
+  })
+
+  return response
+}
+
+export async function createDocument<T extends DocumentData>(collection: string, data: T) {
+  const randomId = generateRandomId()
+  const document = doc(firestore, collection, randomId)
+  await setDoc(document, data)
+
+  return await getDocument<T>(collection, randomId)
+}
+
+export async function createDocumentWithId<T extends DocumentData>(
+  collection: string,
+  uid: string,
+  data: T
+) {
+  const document = doc(firestore, collection, uid)
+  await setDoc(document, data)
+
+  return await getDocument<T>(collection, uid)
+}
 
 export function translateError(firebaseError: FirebaseError) {
   switch (firebaseError.code) {

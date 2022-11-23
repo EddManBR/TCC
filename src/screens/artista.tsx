@@ -2,7 +2,7 @@ import AlbumList from '../components/AlbumList'
 import MusicList from '../components/MusicList'
 import PixIcon from '../components/PixIcon'
 
-import type { Music } from '../services/firebase.d'
+import type { Album, Music } from '../services/firebase.d'
 
 export default function Artista() {
   // TODO: Grab this data from Firebase
@@ -13,22 +13,42 @@ export default function Artista() {
       id: '#123',
       title: 'All Eyez On Me',
       albumId: '#321',
-      albumCoverUrl: 'https://upload.wikimedia.org/wikipedia/pt/9/9c/2Pac_-_All_Eyez_on_Me.jpg',
       views: 1000,
     },
     {
       id: '#12333',
       title: 'All Eyez On Me',
       albumId: '#321',
-      albumCoverUrl: 'https://upload.wikimedia.org/wikipedia/pt/9/9c/2Pac_-_All_Eyez_on_Me.jpg',
       views: 1000,
     },
     {
       id: '#1232311',
       title: 'All Eyez On Me',
       albumId: '#321',
-      albumCoverUrl: 'https://upload.wikimedia.org/wikipedia/pt/9/9c/2Pac_-_All_Eyez_on_Me.jpg',
       views: 1000,
+    },
+  ]
+  const albums: Album[] = [
+    {
+      id: '#123',
+      title: 'Cool Album',
+      coverUrl: 'https://via.placeholder.com/400',
+      releaseYear: '2004',
+      musics: musics,
+    },
+    {
+      id: '#333',
+      title: 'Gangster Album',
+      coverUrl: 'https://via.placeholder.com/400',
+      releaseYear: '2015',
+      musics: musics,
+    },
+    {
+      id: '#321',
+      title: 'Top Album',
+      coverUrl: 'https://via.placeholder.com/400',
+      releaseYear: '2018',
+      musics: musics,
     },
   ]
 
@@ -62,11 +82,11 @@ export default function Artista() {
       </div>
       <div className='text-white mt-52 md:mt-24 p-4'>
         <h1 className='font-bold text-2xl mb-4'>Populares</h1>
-        <MusicList data={musics} />
+        <MusicList data={albums[0].musics} coverUrl={albums[0].coverUrl} />
       </div>
       <div className='text-white mt-4 md:mt-2 p-4'>
         <h1 className='font-bold text-2xl mb-4'>Álbuns</h1>
-        <AlbumList />
+        <AlbumList data={albums} />
       </div>
     </div>
   )
