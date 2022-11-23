@@ -1,63 +1,28 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import AlbumList from '../components/AlbumList'
 import MusicList from '../components/MusicList'
-import UploadMusicModal from '../components/UploadMusicModal'
+import AlbumCreatorModal from '../components/modals/AlbumCreatorModal'
+import UploadMusicModal from '../components/modals/UploadMusicModal'
 import { PlusIcon } from '@heroicons/react/20/solid'
 
-import type { Music, Album } from '../services/firebase.d'
 import { AuthContext } from '../context/auth'
 
 export default function Perfil() {
+  const navigate = useNavigate()
   const { user } = useContext(AuthContext)
   const [uploadVisible, setUploadVisible] = useState(false)
+  const [albumCreatorVisible, setAlbumCreatorVisible] = useState(false)
 
   // TODO: Grab this data from Firebase
   const followerCount = 1000
-  const musics: Music[] = [
-    {
-      id: '#123',
-      title: 'All Eyez On Me',
-      albumId: '#321',
-      views: 1000,
-    },
-    {
-      id: '#12333',
-      title: 'All Eyez On Me',
-      albumId: '#321',
-      views: 1000,
-    },
-    {
-      id: '#1232311',
-      title: 'All Eyez On Me',
-      albumId: '#321',
-      views: 1000,
-    },
-  ]
 
-  const albums: Album[] = [
-    {
-      id: '#123',
-      title: 'Cool Album',
-      coverUrl: 'https://via.placeholder.com/400',
-      releaseYear: '2004',
-      musics,
-    },
-    {
-      id: '#333',
-      title: 'Gangster Album',
-      coverUrl: 'https://via.placeholder.com/400',
-      releaseYear: '2015',
-      musics,
-    },
-    {
-      id: '#321',
-      title: 'Top Album',
-      coverUrl: 'https://via.placeholder.com/400',
-      releaseYear: '2018',
-      musics,
-    },
-  ]
+  useEffect(() => {
+    if (!localStorage.getItem('uid')) navigate('/')
+  }, [localStorage])
+
+  if (!user) return null
 
   return (
     <div className='bg-neutral-800 h-full'>
@@ -89,29 +54,46 @@ export default function Perfil() {
           <h1 className='font-bold text-2xl'>Suas Músicas</h1>
           <button
             className='button-primary ml-4'
-            onClick={() =>
-              setUploadVisible(() => {
-                document.body.style.overflow = 'hidden'
-                return true
-              })
-            }
+            onClick={() => {
+              setUploadVisible(true)
+              document.body.style.overflow = 'hidden'
+            }}
           >
             <PlusIcon className='w-5 h-5' />
           </button>
         </div>
         {/* TODO: Make this thing better */}
-        <MusicList data={albums[0].musics} coverUrl={albums[0].coverUrl} />
+        {user.albums.length > 0 ? (
+          <MusicList data={user.albums[0].musics} coverUrl={user.albums[0].coverUrl} />
+        ) : (
+          <h1 className='text-lg text-neutral-600 font-semibold'>
+            Você ainda não publicou nenhuma música...
+          </h1>
+        )}
       </div>
       <div className='text-white mt-4 md:mt-2 p-4'>
         <div className='flex items-center mb-4'>
           <h1 className='font-bold text-2xl'>Seus Álbuns</h1>
-          <button className='button-primary ml-4'>
+          <button
+            className='button-primary ml-4'
+            onClick={() => {
+              setAlbumCreatorVisible(true)
+              document.body.style.overflow = 'hidden'
+            }}
+          >
             <PlusIcon className='w-5 h-5' />
           </button>
         </div>
-        <AlbumList data={albums} />
+        {user.albums.length > 0 ? (
+          <AlbumList data={user.albums} />
+        ) : (
+          <h1 className='text-lg text-neutral-600 font-semibold'>
+            Você ainda não publicou nenhum álbum...
+          </h1>
+        )}
       </div>
       <UploadMusicModal visible={uploadVisible} setVisible={setUploadVisible} />
+      <AlbumCreatorModal visible={albumCreatorVisible} setVisible={setAlbumCreatorVisible} />
     </div>
   )
 }
