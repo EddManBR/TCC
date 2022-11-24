@@ -64,7 +64,9 @@ export default function Perfil() {
         </div>
         {/* TODO: Make this thing better */}
         {user.albums.length > 0 ? (
-          user.albums.map((item) => <MusicList data={item.musics} coverUrl={item.coverUrl} />)
+          user.albums.map((item, index) => (
+            <MusicList key={index} data={item.musics} coverUrl={item.coverUrl} />
+          ))
         ) : (
           <h1 className='text-lg text-neutral-600 font-semibold'>
             Você ainda não publicou nenhuma música...
