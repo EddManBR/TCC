@@ -1,4 +1,4 @@
-import { app, translateError, createDocumentWithId, getDocument } from '../services/firebase'
+import { app, translateError, setDocumentWithId, getDocument } from '../services/firebase'
 import { createContext, useEffect, useState } from 'react'
 import {
   GoogleAuthProvider,
@@ -17,12 +17,7 @@ type AuthContextValue = {
   user: User | null
   signInGoogle: () => Promise<User | null>
   signInEmail: (email: string, password: string) => Promise<User | null>
-  signUpEmail: (
-    name: string,
-    email: string,
-    password: string,
-    passwordConfirmation: string
-  ) => Promise<User | null>
+  signUpEmail: (name: string, email: string, password: string) => Promise<User | null>
 }
 
 const googleProvider = new GoogleAuthProvider()
@@ -45,7 +40,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   }, [localStorage])
 
   async function createUserDocument(uid: string, name: string) {
-    return await createDocumentWithId<User>('user', uid, {
+    return await setDocumentWithId<User>('user', uid, {
       name,
       albums: [],
       profilePhotoUrl: '',
@@ -83,21 +78,14 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     return null
   }
 
-  async function signUpEmail(
-    name: string,
-    email: string,
-    password: string,
-    passwordConfirmation: string
-  ) {
-    if (password !== passwordConfirmation) throw new Error('As senhas não coincidem')
-
+  async function signUpEmail(name: string, email: string, password: string) {
     try {
       const { user: authUser } = await createUserWithEmailAndPassword(auth, email, password)
-      const userDocument = await createUserDocument(name, authUser.uid)
+      const userDocument = await createUserDocument(authUser.uid, name)
       setUser(userDocument)
       localStorage.setItem('uid', authUser.uid)
 
-      return user
+      return userDocument
     } catch (error) {
       if (error instanceof FirebaseError) throw new Error(translateError(error))
     }

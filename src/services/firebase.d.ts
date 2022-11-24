@@ -6,14 +6,12 @@ export type User = {
 }
 
 export type Music = {
-  id: string
-  albumId: string
+  url: string
   title: string
   views: number
 }
 
 export type Album = {
-  id: string
   title: string
   releaseYear: string
   coverUrl: string

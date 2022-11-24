@@ -10,13 +10,7 @@ export default function MusicList({ data, coverUrl }: MusicListProps) {
   return (
     <div className='flex flex-col space-y-2'>
       {data.map((music, index) => (
-        <MusicDisplay
-          key={music.id}
-          position={index}
-          coverUrl={coverUrl}
-          title={music.title}
-          views={music.views}
-        />
+        <MusicDisplay key={index} coverUrl={coverUrl} title={music.title} views={music.views} />
       ))}
     </div>
   )

@@ -10,41 +10,35 @@ export default function Artista() {
   const followers = 10000
   const musics: Music[] = [
     {
-      id: '#123',
+      url: '',
       title: 'All Eyez On Me',
-      albumId: '#321',
       views: 1000,
     },
     {
-      id: '#12333',
+      url: '',
       title: 'All Eyez On Me',
-      albumId: '#321',
       views: 1000,
     },
     {
-      id: '#1232311',
+      url: '',
       title: 'All Eyez On Me',
-      albumId: '#321',
       views: 1000,
     },
   ]
   const albums: Album[] = [
     {
-      id: '#123',
       title: 'Cool Album',
       coverUrl: 'https://via.placeholder.com/400',
       releaseYear: '2004',
       musics: musics,
     },
     {
-      id: '#333',
       title: 'Gangster Album',
       coverUrl: 'https://via.placeholder.com/400',
       releaseYear: '2015',
       musics: musics,
     },
     {
-      id: '#321',
       title: 'Top Album',
       coverUrl: 'https://via.placeholder.com/400',
       releaseYear: '2018',

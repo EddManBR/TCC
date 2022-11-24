@@ -48,7 +48,7 @@ export async function getCollection<T>(name: string) {
   return response
 }
 
-export async function createDocument<T extends DocumentData>(collection: string, data: T) {
+export async function setDocument<T extends DocumentData>(collection: string, data: T) {
   const randomId = generateRandomId()
   const document = doc(firestore, collection, randomId)
   await setDoc(document, data)
@@ -56,7 +56,7 @@ export async function createDocument<T extends DocumentData>(collection: string,
   return await getDocument<T>(collection, randomId)
 }
 
-export async function createDocumentWithId<T extends DocumentData>(
+export async function setDocumentWithId<T extends DocumentData>(
   collection: string,
   uid: string,
   data: T

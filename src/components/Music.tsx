@@ -4,17 +4,11 @@ type MusicProps = {
   coverUrl: string
   title: string
   views: number
-  position?: number
 }
 
-export default function Music({ coverUrl, title, views, position }: MusicProps) {
+export default function Music({ coverUrl, title, views }: MusicProps) {
   return (
     <div className='flex items-center p-4 hover:bg-white/10 rounded-md'>
-      {position !== null && (
-        <span className='text-sm font-semibold mr-4 w-6 h-6 flex items-center justify-center'>
-          {position}
-        </span>
-      )}
       <img
         className='hidden md:block w-12 h-12 mr-4 rounded-md object-cover'
         src={coverUrl}

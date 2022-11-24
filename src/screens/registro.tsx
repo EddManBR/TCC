@@ -15,10 +15,13 @@ export default function RegistroPage() {
   const navigate = useNavigate()
   const { signInGoogle, signUpEmail } = useContext(AuthContext)
 
+  // TODO: Grab data from all fields
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [pix, setPix] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
@@ -36,10 +39,8 @@ export default function RegistroPage() {
     if (!name || !email || !password) return
 
     try {
-      const user = await signUpEmail(name, email, password, passwordConfirmation)
-      if (!!user) {
-        navigate('/')
-      }
+      const user = await signUpEmail(name, email, password)
+      if (!!user) navigate('/')
     } catch (error) {
       if (error instanceof Error) setErrorMessage(error.message)
     }
@@ -69,7 +70,7 @@ export default function RegistroPage() {
               <span className='font-semibold'>Nome</span>
               <input
                 required
-                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2 border-none  focus:bg-violet-400 placeholder:text-violet-300'
+                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2 focus:border-violet-800 placeholder:text-violet-300'
                 type='text'
                 placeholder='John Doe'
                 value={name}
@@ -78,10 +79,22 @@ export default function RegistroPage() {
             </label>
 
             <label className='text-white block mb-4'>
+              <span className='font-semibold'>Nome de usuário</span>
+              <input
+                required
+                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2  focus:border-violet-800 placeholder:text-violet-300'
+                type='text'
+                placeholder='@johndoe'
+                value={username}
+                onChange={(e) => setUsername(e.currentTarget.value)}
+              />
+            </label>
+
+            <label className='text-white block mb-4'>
               <span className='font-semibold'>E-mail</span>
               <input
                 required
-                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2 border-none  focus:bg-violet-400 placeholder:text-violet-300'
+                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2  focus:border-violet-800 placeholder:text-violet-300'
                 type='email'
                 placeholder='john@doe.com'
                 value={email}
@@ -90,26 +103,26 @@ export default function RegistroPage() {
             </label>
 
             <label className='text-white block mb-4'>
+              <span className='font-semibold'>Chave PIX</span>
+              <input
+                required
+                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2  focus:border-violet-800 placeholder:text-violet-300'
+                type='text'
+                placeholder='000.000.000-00'
+                value={pix}
+                onChange={(e) => setPix(e.currentTarget.value)}
+              />
+            </label>
+
+            <label className='text-white block mb-4'>
               <span className='font-semibold'>Senha</span>
               <input
                 required
-                className='w-full rounded-md  bg-violet-400 mt-1 px-3 py-2 border-none  focus:bg-violet-400 placeholder:text-violet-300'
+                className='w-full rounded-md  bg-violet-400 mt-1 px-3 py-2  focus:border-violet-800 placeholder:text-violet-300'
                 type='password'
                 placeholder='••••••••'
                 value={password}
                 onChange={(e) => setPassword(e.currentTarget.value)}
-              />
-            </label>
-
-            <label className='text-white block mb-6'>
-              <span className='font-semibold'>Confirme sua senha</span>
-              <input
-                required
-                className='w-full rounded-md  bg-violet-400 mt-1 px-3 py-2 border-none  focus:bg-violet-400 placeholder:text-violet-300'
-                type='password'
-                placeholder='••••••••'
-                value={passwordConfirmation}
-                onChange={(e) => setPasswordConfirmation(e.currentTarget.value)}
               />
             </label>
 

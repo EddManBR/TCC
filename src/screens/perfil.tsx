@@ -15,11 +15,8 @@ export default function Perfil() {
   const [uploadVisible, setUploadVisible] = useState(false)
   const [albumCreatorVisible, setAlbumCreatorVisible] = useState(false)
 
-  // TODO: Grab this data from Firebase
-  const followerCount = 1000
-
   useEffect(() => {
-    if (!localStorage.getItem('uid')) navigate('/')
+    if (!localStorage.getItem('uid')) navigate('/login')
   }, [localStorage])
 
   if (!user) return null
@@ -40,9 +37,6 @@ export default function Perfil() {
           />
           <div className='flex flex-col h-min bg-black/40 p-4 rounded-xl text-white'>
             <h1 className='text-4xl font-bold'>{user?.name}</h1>
-            <span className='text-lg font-semibold'>
-              {followerCount.toLocaleString()} seguidores
-            </span>
             <div className='flex space-x-2 mt-4'>
               <button className='w-full button-primary font-semibold'>Editar</button>
             </div>
@@ -54,6 +48,12 @@ export default function Perfil() {
           <h1 className='font-bold text-2xl'>Suas Músicas</h1>
           <button
             className='button-primary ml-4'
+            title={
+              user.albums.length <= 0
+                ? 'Crie ao menos um álbum antes de enviar músicas'
+                : 'Clique para enviar uma nova música'
+            }
+            disabled={user.albums.length <= 0}
             onClick={() => {
               setUploadVisible(true)
               document.body.style.overflow = 'hidden'
@@ -64,7 +64,7 @@ export default function Perfil() {
         </div>
         {/* TODO: Make this thing better */}
         {user.albums.length > 0 ? (
-          <MusicList data={user.albums[0].musics} coverUrl={user.albums[0].coverUrl} />
+          user.albums.map((item) => <MusicList data={item.musics} coverUrl={item.coverUrl} />)
         ) : (
           <h1 className='text-lg text-neutral-600 font-semibold'>
             Você ainda não publicou nenhuma música...
@@ -92,8 +92,12 @@ export default function Perfil() {
           </h1>
         )}
       </div>
-      <UploadMusicModal visible={uploadVisible} setVisible={setUploadVisible} />
-      <AlbumCreatorModal visible={albumCreatorVisible} setVisible={setAlbumCreatorVisible} />
+      <UploadMusicModal user={user} visible={uploadVisible} setVisible={setUploadVisible} />
+      <AlbumCreatorModal
+        user={user}
+        visible={albumCreatorVisible}
+        setVisible={setAlbumCreatorVisible}
+      />
     </div>
   )
 }
