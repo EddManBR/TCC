@@ -39,6 +39,8 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     fetchUser()
   }, [localStorage])
 
+  // TODO: Refactor this stuff to make it fit the new User schema
+
   async function createUserDocument(uid: string, name: string) {
     return await setDocumentWithId<User>('user', uid, {
       name,
