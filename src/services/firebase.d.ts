@@ -1,7 +1,9 @@
 export type User = {
   name: string
+  username: string
   profilePhotoUrl: string
   bannerPhotoUrl: string
+  pix: string
   albums: Album[]
 }
 

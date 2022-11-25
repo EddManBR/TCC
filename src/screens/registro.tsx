@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from 'react'
+import { FormEvent, useContext, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/auth'
 
@@ -9,7 +9,8 @@ import { Link } from 'react-router-dom'
 
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 import { FcGoogle } from 'react-icons/fc'
-import { useEffect } from 'react'
+
+const USERNAME_MAX_SIZE = 12
 
 export default function RegistroPage() {
   const navigate = useNavigate()
@@ -18,29 +19,28 @@ export default function RegistroPage() {
   // TODO: Grab data from all fields
 
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [pix, setPix] = useState('')
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
-    if (!!localStorage.getItem('uid')) navigate('/')
+    if (!!localStorage.getItem('uid')) document.location.href = '/perfil'
   }, [navigate])
 
   async function handleGoogleClick() {
     const user = await signInGoogle()
-    if (!!user) navigate('/')
+    if (!!user) document.location.href = '/perfil'
   }
 
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault()
 
-    if (!name || !email || !password) return
+    if (!name || !email || !username || !password) return
 
     try {
-      const user = await signUpEmail(name, email, password)
-      if (!!user) navigate('/')
+      const user = await signUpEmail(name, email, username, password)
+      if (!!user) document.location.href = '/perfil'
     } catch (error) {
       if (error instanceof Error) setErrorMessage(error.message)
     }
@@ -82,11 +82,13 @@ export default function RegistroPage() {
               <span className='font-semibold'>Nome de usuário</span>
               <input
                 required
-                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2  focus:border-violet-800 placeholder:text-violet-300'
+                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2 focus:border-violet-800 placeholder:text-violet-300'
                 type='text'
-                placeholder='@johndoe'
+                placeholder='johndoe'
                 value={username}
-                onChange={(e) => setUsername(e.currentTarget.value)}
+                onChange={(e) =>
+                  setUsername(e.currentTarget.value.toLowerCase().substring(0, USERNAME_MAX_SIZE))
+                }
               />
             </label>
 
@@ -99,18 +101,6 @@ export default function RegistroPage() {
                 placeholder='john@doe.com'
                 value={email}
                 onChange={(e) => setEmail(e.currentTarget.value)}
-              />
-            </label>
-
-            <label className='text-white block mb-4'>
-              <span className='font-semibold'>Chave PIX</span>
-              <input
-                required
-                className='w-full rounded-md bg-violet-400 mt-1 px-3 py-2  focus:border-violet-800 placeholder:text-violet-300'
-                type='text'
-                placeholder='000.000.000-00'
-                value={pix}
-                onChange={(e) => setPix(e.currentTarget.value)}
               />
             </label>
 

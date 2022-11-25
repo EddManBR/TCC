@@ -1,7 +1,11 @@
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
-import { Link } from 'react-router-dom'
+import { useContext } from 'react'
+import { AuthContext } from '../../context/auth'
+import { MagnifyingGlassIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/20/solid'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Head() {
+  const { user, logout } = useContext(AuthContext)
+
   return (
     <div className='text-white bg-neutral-900 w- h-16 px-4 flex justify-between items-center'>
       <div className='flex text-4xl pl-7 flex-col items-center font-Kanit'>
@@ -17,13 +21,46 @@ export default function Head() {
             className='rounded placeholder:text-neutral-400 bg-neutral-700 text-white border-none outline-none pl-10'
           />
         </label>
-        <Link to='/perfil'>
-          <img
-            src='https://www.riopardo.rs.gov.br/fotos/c5aad4c7ac0ab370339f50299fee71d7.jpg'
-            className='w-10 h-10 rounded-lg object-cover'
-          />
-        </Link>
+        {user ? <LoggedExtension /> : <UnloggedExtension />}
       </div>
+    </div>
+  )
+}
+
+function LoggedExtension() {
+  const navigate = useNavigate()
+  const { logout } = useContext(AuthContext)
+
+  return (
+    <div className='flex space-x-2'>
+      <Link to='/perfil'>
+        <img
+          src='https://www.riopardo.rs.gov.br/fotos/c5aad4c7ac0ab370339f50299fee71d7.jpg'
+          className='w-10 h-10 rounded-lg object-cover'
+        />
+      </Link>
+      <button
+        className='button-secondary'
+        onClick={() => {
+          logout()
+          navigate('/login')
+        }}
+      >
+        <ArrowLeftOnRectangleIcon className='w-5 h-5' />
+      </button>
+    </div>
+  )
+}
+
+function UnloggedExtension() {
+  return (
+    <div className='flex space-x-2'>
+      <Link to='/login' className='button-primary'>
+        Entrar
+      </Link>
+      <Link to='/registro' className='button-secondary'>
+        Registrar
+      </Link>
     </div>
   )
 }

@@ -17,7 +17,13 @@ type AuthContextValue = {
   user: User | null
   signInGoogle: () => Promise<User | null>
   signInEmail: (email: string, password: string) => Promise<User | null>
-  signUpEmail: (name: string, email: string, password: string) => Promise<User | null>
+  signUpEmail: (
+    name: string,
+    email: string,
+    username: string,
+    password: string
+  ) => Promise<User | null>
+  logout: () => void
 }
 
 const googleProvider = new GoogleAuthProvider()
@@ -37,28 +43,36 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     }
 
     fetchUser()
-  }, [localStorage])
+  }, [])
 
   // TODO: Refactor this stuff to make it fit the new User schema
 
-  async function createUserDocument(uid: string, name: string) {
+  async function createUserDocument(uid: string, name: string, username: string) {
     return await setDocumentWithId<User>('user', uid, {
       name,
+      username,
       albums: [],
       profilePhotoUrl: '',
       bannerPhotoUrl: '',
+      pix: '',
     })
   }
 
   async function signInGoogle() {
     try {
       const { user: authUser } = await signInWithPopup(auth, googleProvider)
-      const userDocument = await createUserDocument(authUser.uid, authUser.displayName!)
-      setUser(userDocument)
 
+      const alreadyRegisteredUser = await getDocument<User>('user', authUser.uid)
       localStorage.setItem('uid', authUser.uid)
 
-      return userDocument
+      if (!alreadyRegisteredUser) {
+        const username = authUser.email!.split('@')[0]
+        const userDocument = await createUserDocument(authUser.uid, authUser.displayName!, username)
+        setUser(userDocument)
+        return userDocument
+      }
+
+      return alreadyRegisteredUser
     } catch (error) {
       return null
     }
@@ -80,10 +94,10 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     return null
   }
 
-  async function signUpEmail(name: string, email: string, password: string) {
+  async function signUpEmail(name: string, email: string, username: string, password: string) {
     try {
       const { user: authUser } = await createUserWithEmailAndPassword(auth, email, password)
-      const userDocument = await createUserDocument(authUser.uid, name)
+      const userDocument = await createUserDocument(authUser.uid, name, username)
       setUser(userDocument)
       localStorage.setItem('uid', authUser.uid)
 
@@ -95,8 +109,15 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     return null
   }
 
+  function logout() {
+    setUser(null)
+    localStorage.removeItem('uid')
+  }
+
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, signInEmail, signInGoogle, signUpEmail }}>
+    <AuthContext.Provider
+      value={{ signed: !!user, user, signInEmail, signInGoogle, signUpEmail, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )

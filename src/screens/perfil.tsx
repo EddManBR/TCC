@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import AlbumList from '../components/AlbumList'
@@ -15,6 +15,18 @@ export default function Perfil() {
   const [uploadVisible, setUploadVisible] = useState(false)
   const [albumCreatorVisible, setAlbumCreatorVisible] = useState(false)
 
+  const profileLetters = useMemo(() => {
+    if (!user) return
+
+    const splittedName = user.name.split(' ')
+    const firstLetters = splittedName.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.charAt(0).toUpperCase(),
+      ''
+    )
+
+    return firstLetters
+  }, [user])
+
   useEffect(() => {
     if (!localStorage.getItem('uid')) navigate('/login')
   }, [localStorage])
@@ -26,17 +38,27 @@ export default function Perfil() {
       <div className='relative'>
         <img
           className='w-full h-64 object-cover pointer-events-none select-none'
-          src='https://via.placeholder.com/1080x400'
+          src={user.bannerPhotoUrl || 'https://via.placeholder.com/2000x400'}
           alt='banner'
         />
         <div className='flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-4 absolute top-24 md:top-36 inset-x-0 md:inset-x-auto md:left-8'>
           <img
-            src='https://via.placeholder.com/600'
-            className='w-48 h-48 rounded-lg shadow-lg pointer-events-none select-none'
+            src={user.profilePhotoUrl}
+            className={`w-48 h-48 rounded-lg shadow-lg pointer-events-none select-none ${
+              !user.profilePhotoUrl && 'hidden'
+            }`}
             alt='profile'
           />
+          <div
+            className={`w-48 h-48 flex justify-center items-center rounded-lg shadow-lg select-none bg-violet-800 ${
+              user.profilePhotoUrl && 'hidden'
+            }`}
+          >
+            <span className='text-white font-bold text-7xl'>{profileLetters}</span>
+          </div>
           <div className='flex flex-col h-min bg-black/40 p-4 rounded-xl text-white'>
-            <h1 className='text-4xl font-bold'>{user?.name}</h1>
+            <h1 className='text-4xl font-bold'>{user.name}</h1>
+            <span className='text-lg text-neutral-300 font-semibold'>@{user.username}</span>
             <div className='flex space-x-2 mt-4'>
               <button className='w-full button-primary font-semibold'>Editar</button>
             </div>

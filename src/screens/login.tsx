@@ -19,12 +19,12 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
-    if (!!localStorage.getItem('uid')) navigate('/')
-  }, [navigate])
+    if (!!localStorage.getItem('uid')) document.location.href = '/perfil'
+  }, [])
 
   async function handleGoogleClick() {
     const user = await signInGoogle()
-    if (!!user) navigate('/')
+    if (!!user) document.location.href = '/perfil'
   }
 
   async function handleFormSubmit(e: FormEvent) {
@@ -34,7 +34,7 @@ export default function Login() {
 
     try {
       const user = await signInEmail(email, password)
-      if (!!user) navigate('/')
+      if (!!user) document.location.href = '/perfil'
     } catch (error) {
       if (error instanceof Error) setErrorMessage(error.message)
     }
