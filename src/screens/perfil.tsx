@@ -102,7 +102,7 @@ export default function Perfil() {
           </button>
         </div>
         {/* TODO: Make this thing better */}
-        {user.albums.length > 0 ? (
+        {musicCount > 0 ? (
           user.albums.map((item, index) => (
             <MusicList key={index} data={item.musics} coverUrl={item.coverUrl} author={user.name} />
           ))
