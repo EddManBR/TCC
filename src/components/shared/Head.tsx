@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import { AuthContext } from '../../context/auth'
 import { MagnifyingGlassIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/20/solid'
 import { Link, useNavigate } from 'react-router-dom'
@@ -29,15 +29,39 @@ export default function Head() {
 
 function LoggedExtension() {
   const navigate = useNavigate()
-  const { logout } = useContext(AuthContext)
+  const { user, logout } = useContext(AuthContext)
+
+  const profileLetters = useMemo(() => {
+    if (!user) return
+
+    const splittedName = user.name.split(' ')
+    const firstLetters = splittedName.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.charAt(0).toUpperCase(),
+      ''
+    )
+
+    return firstLetters
+  }, [user])
+
+  if (!user) return null
 
   return (
     <div className='flex space-x-2'>
       <Link to='/perfil'>
         <img
-          src='https://www.riopardo.rs.gov.br/fotos/c5aad4c7ac0ab370339f50299fee71d7.jpg'
-          className='w-10 h-10 rounded-lg object-cover'
+          src={user.profilePhotoUrl}
+          className={`w-10 h-10 rounded-lg shadow-lg object-cover pointer-events-none select-none ${
+            !user.profilePhotoUrl && 'hidden'
+          }`}
+          alt='profile'
         />
+        <div
+          className={`w-10 h-10 flex justify-center items-center rounded-lg shadow-lg select-none bg-violet-800 ${
+            user.profilePhotoUrl && 'hidden'
+          }`}
+        >
+          <span className='text-white font-bold text-xs'>{profileLetters}</span>
+        </div>
       </Link>
       <button
         className='button-secondary'

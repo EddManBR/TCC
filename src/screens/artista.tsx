@@ -76,7 +76,7 @@ export default function Artista() {
       </div>
       <div className='text-white mt-52 md:mt-24 p-4'>
         <h1 className='font-bold text-2xl mb-4'>Populares</h1>
-        <MusicList data={albums[0].musics} coverUrl={albums[0].coverUrl} />
+        <MusicList data={albums[0].musics} coverUrl={albums[0].coverUrl} author='2Pac' />
       </div>
       <div className='text-white mt-4 md:mt-2 p-4'>
         <h1 className='font-bold text-2xl mb-4'>Álbuns</h1>

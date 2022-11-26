@@ -1,14 +1,27 @@
+import { useContext } from 'react'
+import { AudioContext } from '../context/audio'
 import { EllipsisVerticalIcon, ShareIcon } from '@heroicons/react/20/solid'
 
 type MusicProps = {
   coverUrl: string
   title: string
+  author: string
+  url: string
   views: number
 }
 
-export default function Music({ coverUrl, title, views }: MusicProps) {
+export default function Music({ coverUrl, title, author, views, url }: MusicProps) {
+  const audio = new Audio(url)
+  const { play, setData } = useContext(AudioContext)
+
   return (
-    <div className='flex items-center p-4 hover:bg-white/10 rounded-md'>
+    <div
+      className='flex items-center p-4 hover:bg-white/10 rounded-md cursor-pointer'
+      onClick={() => {
+        play(audio)
+        setData({ author, title, coverUrl })
+      }}
+    >
       <img
         className='hidden md:block w-12 h-12 mr-4 rounded-md object-cover'
         src={coverUrl}

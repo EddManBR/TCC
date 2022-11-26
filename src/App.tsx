@@ -1,5 +1,6 @@
-import { AuthContextProvider } from './context/auth'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AuthContextProvider } from './context/auth'
+import { AudioContextProvider } from './context/audio'
 
 import Layout from './components/shared/Layout'
 
@@ -18,21 +19,23 @@ function App() {
   return (
     <div>
       <AuthContextProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<Layout />}>
-              <Route index element={<Inicio />} />
-              <Route path='/colecoes' element={<Colecoes />} />
-              <Route path='/playlists' element={<Playlists />} />
-              <Route path='/favoritas' element={<Favoritas />} />
-              <Route path='/perfil' element={<Perfil />} />
-              <Route path='/artista/:id' element={<Artista />} />
-            </Route>
-            <Route path='/login' element={<Login />} />
-            <Route path='/registro' element={<Registro />} />
-            <Route path='/musica' element={<Musica />} />
-          </Routes>
-        </BrowserRouter>
+        <AudioContextProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path='/' element={<Layout />}>
+                <Route index element={<Inicio />} />
+                <Route path='/colecoes' element={<Colecoes />} />
+                <Route path='/playlists' element={<Playlists />} />
+                <Route path='/favoritas' element={<Favoritas />} />
+                <Route path='/perfil' element={<Perfil />} />
+                <Route path='/artista/:id' element={<Artista />} />
+              </Route>
+              <Route path='/login' element={<Login />} />
+              <Route path='/registro' element={<Registro />} />
+              <Route path='/musica' element={<Musica />} />
+            </Routes>
+          </BrowserRouter>
+        </AudioContextProvider>
       </AuthContextProvider>
     </div>
   )

@@ -1,16 +1,19 @@
 import { Outlet } from 'react-router-dom'
-import Sidebar from './Sidebar'
+
 import Head from './Head'
+import Sidebar from './Sidebar'
+import MusicPlayer from '../MusicPlayer'
 
 export default function Layout() {
   return (
-    <div className='flex flex-col min-h-screen overflow-hidden'>
+    <div className='flex flex-col min-h-screen overflow-hidden bg-neutral-800'>
       <Head />
       <div className='flex h-full'>
         <Sidebar />
-        <div className='w-full'>
+        <div className='w-full mb-20'>
           <Outlet />
         </div>
+        <MusicPlayer />
       </div>
     </div>
   )

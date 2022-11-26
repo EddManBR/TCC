@@ -15,12 +15,22 @@ export default function Perfil() {
   const [uploadVisible, setUploadVisible] = useState(false)
   const [albumCreatorVisible, setAlbumCreatorVisible] = useState(false)
 
+  const musicCount = useMemo(() => {
+    if (!user) return 0
+
+    let result = 0
+    user.albums.forEach((album) => (result += album.musics.length))
+
+    return result
+  }, [user])
+
   const profileLetters = useMemo(() => {
     if (!user) return
 
     const splittedName = user.name.split(' ')
     const firstLetters = splittedName.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.charAt(0).toUpperCase(),
+      (accumulator, currentValue) =>
+        accumulator + currentValue.charAt(0).toUpperCase().substring(0, 2),
       ''
     )
 
@@ -36,15 +46,17 @@ export default function Perfil() {
   return (
     <div className='bg-neutral-800 h-full'>
       <div className='relative'>
-        <img
-          className='w-full h-64 object-cover pointer-events-none select-none'
-          src={user.bannerPhotoUrl || 'https://via.placeholder.com/2000x400'}
-          alt='banner'
-        />
+        {user.bannerPhotoUrl && (
+          <img
+            className='w-full h-64 object-cover pointer-events-none select-none'
+            src={user.bannerPhotoUrl}
+          />
+        )}
+        <div className='w-full h-64 select-none pointer-events-none bg-violet-900'></div>
         <div className='flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-4 absolute top-24 md:top-36 inset-x-0 md:inset-x-auto md:left-8'>
           <img
             src={user.profilePhotoUrl}
-            className={`w-48 h-48 rounded-lg shadow-lg pointer-events-none select-none ${
+            className={`w-48 h-48 rounded-lg shadow-lg pointer-events-none object-cover select-none ${
               !user.profilePhotoUrl && 'hidden'
             }`}
             alt='profile'
@@ -67,7 +79,12 @@ export default function Perfil() {
       </div>
       <div className='text-white mt-52 md:mt-24 p-4'>
         <div className='flex items-center mb-4'>
-          <h1 className='font-bold text-2xl'>Suas Músicas</h1>
+          <h1 className='font-bold text-2xl'>
+            Suas Músicas&nbsp;
+            <span className='text-neutral-500 font-semibold'>
+              ({musicCount} {musicCount === 1 ? 'música' : 'músicas'})
+            </span>
+          </h1>
           <button
             className='button-primary ml-4'
             title={
@@ -87,7 +104,7 @@ export default function Perfil() {
         {/* TODO: Make this thing better */}
         {user.albums.length > 0 ? (
           user.albums.map((item, index) => (
-            <MusicList key={index} data={item.musics} coverUrl={item.coverUrl} />
+            <MusicList key={index} data={item.musics} coverUrl={item.coverUrl} author={user.name} />
           ))
         ) : (
           <h1 className='text-lg text-neutral-600 font-semibold'>
