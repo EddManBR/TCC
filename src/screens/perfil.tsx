@@ -5,6 +5,7 @@ import AlbumList from '../components/AlbumList'
 import MusicList from '../components/MusicList'
 import AlbumCreatorModal from '../components/modals/AlbumCreatorModal'
 import UploadMusicModal from '../components/modals/UploadMusicModal'
+import EditProfileModal from '../components/modals/EditProfileModal'
 import { PlusIcon } from '@heroicons/react/20/solid'
 
 import { AuthContext } from '../context/auth'
@@ -12,6 +13,8 @@ import { AuthContext } from '../context/auth'
 export default function Perfil() {
   const navigate = useNavigate()
   const { user } = useContext(AuthContext)
+
+  const [editProfileVisible, setEditProfileVisible] = useState(false)
   const [uploadVisible, setUploadVisible] = useState(false)
   const [albumCreatorVisible, setAlbumCreatorVisible] = useState(false)
 
@@ -29,12 +32,11 @@ export default function Perfil() {
 
     const splittedName = user.name.split(' ')
     const firstLetters = splittedName.reduce(
-      (accumulator, currentValue) =>
-        accumulator + currentValue.charAt(0).toUpperCase().substring(0, 2),
+      (accumulator, currentValue) => accumulator + currentValue.charAt(0).toUpperCase(),
       ''
     )
 
-    return firstLetters
+    return firstLetters.substring(0, 3)
   }, [user])
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export default function Perfil() {
             className={`w-48 h-48 rounded-lg shadow-lg pointer-events-none object-cover select-none ${
               !user.profilePhotoUrl && 'hidden'
             }`}
-            alt='profile'
+            alt={user.name}
           />
           <div
             className={`w-48 h-48 flex justify-center items-center rounded-lg shadow-lg select-none bg-violet-800 ${
@@ -68,16 +70,24 @@ export default function Perfil() {
           >
             <span className='text-white font-bold text-7xl'>{profileLetters}</span>
           </div>
-          <div className='flex flex-col h-min bg-black/40 p-4 rounded-xl text-white'>
-            <h1 className='text-4xl font-bold'>{user.name}</h1>
+          <div className='flex flex-col h-min bg-black/40 p-4 rounded-xl text-white max-w-md'>
+            <h1 className='text-4xl font-bold truncate'>{user.name}</h1>
             <span className='text-lg text-neutral-300 font-semibold'>@{user.username}</span>
             <div className='flex space-x-2 mt-4'>
-              <button className='w-full button-primary font-semibold'>Editar</button>
+              <button
+                className='w-full button-primary font-semibold'
+                onClick={() => {
+                  setEditProfileVisible(true)
+                  document.body.style.overflow = 'hidden'
+                }}
+              >
+                Editar
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <div className='text-white mt-52 md:mt-24 p-4'>
+      <div className='text-white mt-60 md:mt-24 p-4'>
         <div className='flex items-center mb-4'>
           <h1 className='font-bold text-2xl'>
             Suas Músicas&nbsp;
@@ -133,6 +143,11 @@ export default function Perfil() {
           </h1>
         )}
       </div>
+      <EditProfileModal
+        user={user}
+        visible={editProfileVisible}
+        setVisible={setEditProfileVisible}
+      />
       <UploadMusicModal user={user} visible={uploadVisible} setVisible={setUploadVisible} />
       <AlbumCreatorModal
         user={user}

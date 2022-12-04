@@ -39,16 +39,15 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     async function fetchUser() {
       if (!storageUid) return
       const userResponse = await getDocument<User>('user', storageUid)
-      setUser(userResponse)
+      setUser({ ...userResponse, id: storageUid })
     }
 
     fetchUser()
   }, [])
 
-  // TODO: Refactor this stuff to make it fit the new User schema
-
-  async function createUserDocument(uid: string, name: string, username: string) {
-    return await setDocumentWithId<User>('user', uid, {
+  async function createUserDocument(id: string, name: string, username: string) {
+    return await setDocumentWithId<User>('user', id, {
+      id,
       name,
       username,
       albums: [],

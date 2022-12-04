@@ -10,7 +10,7 @@ export default function Layout() {
       <Head />
       <div className='flex h-full'>
         <Sidebar />
-        <div className='w-full mb-20'>
+        <div className='w-full mb-[5.5rem]'>
           <Outlet />
         </div>
         <MusicPlayer />

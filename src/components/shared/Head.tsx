@@ -40,7 +40,7 @@ function LoggedExtension() {
       ''
     )
 
-    return firstLetters
+    return firstLetters.substring(0, 3)
   }, [user])
 
   if (!user) return null

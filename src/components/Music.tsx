@@ -22,11 +22,7 @@ export default function Music({ coverUrl, title, author, views, url }: MusicProp
         setData({ author, title, coverUrl })
       }}
     >
-      <img
-        className='hidden md:block w-12 h-12 mr-4 rounded-md object-cover'
-        src={coverUrl}
-        alt={title}
-      />
+      <img className='w-12 h-12 mr-4 rounded-md object-cover' src={coverUrl} alt={title} />
       <div className='flex flex-col'>
         <span>{title}</span>
         <span className='text-sm text-neutral-400'>{views.toLocaleString()}</span>

@@ -16,8 +16,6 @@ export default function RegistroPage() {
   const navigate = useNavigate()
   const { signInGoogle, signUpEmail } = useContext(AuthContext)
 
-  // TODO: Grab data from all fields
-
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
