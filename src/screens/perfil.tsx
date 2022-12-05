@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import AlbumList from '../components/AlbumList'
@@ -7,12 +7,18 @@ import AlbumCreatorModal from '../components/modals/AlbumCreatorModal'
 import UploadMusicModal from '../components/modals/UploadMusicModal'
 import EditProfileModal from '../components/modals/EditProfileModal'
 import { PlusIcon } from '@heroicons/react/20/solid'
+import { PencilIcon } from '@heroicons/react/24/solid'
 
 import { AuthContext } from '../context/auth'
+
+import type { ChangeEvent } from 'react'
 
 export default function Perfil() {
   const navigate = useNavigate()
   const { user } = useContext(AuthContext)
+
+  const profileImageInputElement = useRef<HTMLInputElement>(null)
+  const bannerImageInputElement = useRef<HTMLInputElement>(null)
 
   const [editProfileVisible, setEditProfileVisible] = useState(false)
   const [uploadVisible, setUploadVisible] = useState(false)
@@ -43,33 +49,75 @@ export default function Perfil() {
     if (!localStorage.getItem('uid')) navigate('/login')
   }, [localStorage])
 
+  function profileImageInputChanged() {
+    console.log('imageInputChanged')
+  }
+
+  function bannerInputChanged() {
+    console.log('bannerInputChanged')
+  }
+
   if (!user) return null
 
   return (
     <div className='bg-neutral-800 h-full'>
+      <input
+        id='banner-image-input'
+        name='banner-image-input'
+        type='file'
+        accept='image/*'
+        ref={bannerImageInputElement}
+        onChange={bannerInputChanged}
+        className='w-0 h-0 hidden overflow-hidden'
+      />
+      <input
+        id='profile-image-input'
+        name='profile-image-input'
+        type='file'
+        accept='image/*'
+        ref={profileImageInputElement}
+        onChange={profileImageInputChanged}
+        className='w-0 h-0 hidden overflow-hidden'
+      />
       <div className='relative'>
-        {user.bannerPhotoUrl && (
-          <img
-            className='w-full h-64 object-cover pointer-events-none select-none'
-            src={user.bannerPhotoUrl}
-          />
-        )}
-        <div className='w-full h-64 select-none pointer-events-none bg-violet-900'></div>
-        <div className='flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-4 absolute top-24 md:top-36 inset-x-0 md:inset-x-auto md:left-8'>
-          <img
-            src={user.profilePhotoUrl}
-            className={`w-48 h-48 rounded-lg shadow-lg pointer-events-none object-cover select-none ${
-              !user.profilePhotoUrl && 'hidden'
-            }`}
-            alt={user.name}
-          />
-          <div
-            className={`w-48 h-48 flex justify-center items-center rounded-lg shadow-lg select-none bg-violet-800 ${
-              user.profilePhotoUrl && 'hidden'
-            }`}
-          >
-            <span className='text-white font-bold text-7xl'>{profileLetters}</span>
+        <label htmlFor='banner-image-input'>
+          <div className='w-full h-64 group'>
+            {user.bannerPhotoUrl ? (
+              <img
+                className='w-full h-full object-cover select-none cursor-pointer'
+                src={user.bannerPhotoUrl}
+              />
+            ) : (
+              <div className='w-full h-full select-none bg-violet-900 cursor-pointer'></div>
+            )}
+
+            <div className='pointer-events-none absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100'>
+              <PencilIcon className='w-6 h-6 text-white' />
+            </div>
           </div>
+        </label>
+
+        <div className='flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-4 absolute top-24 md:top-36 inset-x-0 md:inset-x-auto md:left-8'>
+          <label htmlFor='profile-image-input'>
+            <div className='relative w-48 h-48 rounded-lg overflow-hidden shadow-lg select-none cursor-pointer group'>
+              <img
+                src={user.profilePhotoUrl}
+                alt={user.name}
+                className={`w-full h-full object-cover ${!user.profilePhotoUrl && 'hidden'}`}
+              />
+              <div
+                className={`w-full h-full flex justify-center items-center bg-violet-800 ${
+                  user.profilePhotoUrl && 'hidden'
+                }`}
+              >
+                <span className='text-white font-bold text-7xl'>{profileLetters}</span>
+              </div>
+              <div className='pointer-events-none absolute top-0 left-0 w-48 h-48 flex items-center justify-center rounded-lg bg-black/40 opacity-0 group-hover:opacity-100'>
+                <PencilIcon className='w-6 h-6 text-white' />
+              </div>
+            </div>
+          </label>
+
           <div className='flex flex-col h-min bg-black/40 p-4 rounded-xl text-white max-w-md'>
             <h1 className='text-4xl font-bold truncate'>{user.name}</h1>
             <span className='text-lg text-neutral-300 font-semibold'>@{user.username}</span>

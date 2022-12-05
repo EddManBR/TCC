@@ -29,7 +29,7 @@ export default function AlbumCreatorModal({ user, visible, setVisible }: AlbumCr
   const [imageFile, setImageFile] = useState<File>()
   const [submitDisabled, setSubmitDisabled] = useState(false)
 
-  function fileInputChanged(e: ChangeEvent) {
+  function fileInputChanged() {
     const { current } = fileInputElement
     if (!current) return
 

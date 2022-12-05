@@ -53,7 +53,7 @@ function LoggedExtension() {
           className={`w-10 h-10 rounded-lg shadow-lg object-cover pointer-events-none select-none ${
             !user.profilePhotoUrl && 'hidden'
           }`}
-          alt='profile'
+          alt={user.name}
         />
         <div
           className={`w-10 h-10 flex justify-center items-center rounded-lg shadow-lg select-none bg-violet-800 ${

@@ -51,10 +51,7 @@ export default function UploadMusicModal({ user, ...handlers }: UploadMusicModal
 
     albums[albumIndex].musics = musics
 
-    const userResponse = await setDocumentWithId<User>('user', uid, {
-      ...user,
-      albums,
-    })
+    const userResponse = await setDocumentWithId<User>('user', uid, { ...user, albums })
 
     navigate(0)
   }
