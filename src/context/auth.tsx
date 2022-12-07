@@ -38,7 +38,15 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
 
     async function fetchUser() {
       if (!storageUid) return
+
       const userResponse = await getDocument<User>('user', storageUid)
+
+      if (!userResponse) {
+        localStorage.removeItem('uid')
+        document.location.href = '/login'
+        return
+      }
+
       setUser({ ...userResponse, id: storageUid })
     }
 

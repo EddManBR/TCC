@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { uploadFile } from '../services/storage'
 
 import AlbumList from '../components/AlbumList'
 import MusicList from '../components/MusicList'
@@ -10,8 +11,7 @@ import { PlusIcon } from '@heroicons/react/20/solid'
 import { PencilIcon } from '@heroicons/react/24/solid'
 
 import { AuthContext } from '../context/auth'
-
-import type { ChangeEvent } from 'react'
+import { updateProfile } from '../services/api/user'
 
 export default function Perfil() {
   const navigate = useNavigate()
@@ -19,6 +19,9 @@ export default function Perfil() {
 
   const profileImageInputElement = useRef<HTMLInputElement>(null)
   const bannerImageInputElement = useRef<HTMLInputElement>(null)
+
+  const [profileImageUrl, setProfileImageUrl] = useState('')
+  const [bannerImageUrl, setBannerImageUrl] = useState('')
 
   const [editProfileVisible, setEditProfileVisible] = useState(false)
   const [uploadVisible, setUploadVisible] = useState(false)
@@ -46,15 +49,52 @@ export default function Perfil() {
   }, [user])
 
   useEffect(() => {
+    if (!user) return
+
+    setBannerImageUrl(user.bannerPhotoUrl)
+    setProfileImageUrl(user.profilePhotoUrl)
+  }, [user])
+
+  useEffect(() => {
     if (!localStorage.getItem('uid')) navigate('/login')
   }, [localStorage])
 
-  function profileImageInputChanged() {
-    console.log('imageInputChanged')
+  async function profileImageInputChanged() {
+    const { current } = profileImageInputElement
+    if (!current || !user) return
+
+    const { files } = current
+
+    if (files && files.length === 1) {
+      const imageFile = files[0]
+      const objectUrl = URL.createObjectURL(imageFile)
+
+      setProfileImageUrl(objectUrl)
+
+      const profilePhotoUrl = await uploadFile(imageFile, `${user.username}_pfp`)
+      await updateProfile(user.id, { profilePhotoUrl })
+
+      navigate(0)
+    }
   }
 
-  function bannerInputChanged() {
-    console.log('bannerInputChanged')
+  async function bannerInputChanged() {
+    const { current } = bannerImageInputElement
+    if (!current || !user) return
+
+    const { files } = current
+
+    if (files && files.length === 1) {
+      const imageFile = files[0]
+      const objectUrl = URL.createObjectURL(imageFile)
+
+      setBannerImageUrl(objectUrl)
+
+      const bannerPhotoUrl = await uploadFile(imageFile, `${user.username}_bp`)
+      await updateProfile(user.id, { bannerPhotoUrl })
+
+      navigate(0)
+    }
   }
 
   if (!user) return null
@@ -82,10 +122,10 @@ export default function Perfil() {
       <div className='relative'>
         <label htmlFor='banner-image-input'>
           <div className='w-full h-64 group'>
-            {user.bannerPhotoUrl ? (
+            {bannerImageUrl ? (
               <img
                 className='w-full h-full object-cover select-none cursor-pointer'
-                src={user.bannerPhotoUrl}
+                src={bannerImageUrl}
               />
             ) : (
               <div className='w-full h-full select-none bg-violet-900 cursor-pointer'></div>
@@ -101,13 +141,13 @@ export default function Perfil() {
           <label htmlFor='profile-image-input'>
             <div className='relative w-48 h-48 rounded-lg overflow-hidden shadow-lg select-none cursor-pointer group'>
               <img
-                src={user.profilePhotoUrl}
+                src={profileImageUrl}
                 alt={user.name}
-                className={`w-full h-full object-cover ${!user.profilePhotoUrl && 'hidden'}`}
+                className={`w-full h-full object-cover ${!profileImageUrl && 'hidden'}`}
               />
               <div
                 className={`w-full h-full flex justify-center items-center bg-violet-800 ${
-                  user.profilePhotoUrl && 'hidden'
+                  profileImageUrl && 'hidden'
                 }`}
               >
                 <span className='text-white font-bold text-7xl'>{profileLetters}</span>
