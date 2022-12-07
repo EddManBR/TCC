@@ -1,16 +1,17 @@
 import { useState, useEffect, useMemo } from 'react'
 import { getArtistByUsername } from '../services/api/artist'
-import { useNavigate, useNavigation, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import AlbumList from '../components/AlbumList'
 import MusicList from '../components/MusicList'
 import PixIcon from '../components/PixIcon'
 
-import type { Album, Music, User } from '../services/firebase.d'
+import type { User } from '../services/firebase.d'
 
 export default function Artista() {
   const { id } = useParams()
   const navigate = useNavigate()
+
   const [user, setUser] = useState<User>()
 
   const musicCount = useMemo(() => {
